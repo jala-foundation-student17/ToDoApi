@@ -1,3 +1,4 @@
+using Api.Extensions;
 using DataAccess;
 using InfrastructureContracts.DataAccess;
 using InfrastructureContracts.Repositories;
@@ -14,10 +15,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<DbContextOptionsBuilder>();
-builder.Services.AddTransient<IAssignmentRepository, AssignmentRepository>();
-builder.Services.AddTransient<IAssignmentRequisitionHandler, AssignmentRequisitionHandler>();
-builder.Services.AddDbContext<IMySqlContext, MySqlContext>(opt=>opt.UseInMemoryDatabase("database"));
+
+builder.Services.AddRepositories();
+builder.Services.AddHandlers();
+
+var connStr = builder.Configuration.GetConnectionString("MySql");
+builder.Services.DataAccess(connStr);
 
 var app = builder.Build();
 

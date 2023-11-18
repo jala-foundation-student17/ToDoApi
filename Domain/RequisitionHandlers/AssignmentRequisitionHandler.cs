@@ -10,25 +10,51 @@ namespace RequisitionHandlers;
 
 public sealed class AssignmentRequisitionHandler : IAssignmentRequisitionHandler
 {
-    private readonly IAssignmentRepository _repo;
-    public AssignmentRequisitionHandler(IAssignmentRepository repo)
+    private readonly IAssignmentRepository _assignmentRepo;
+    private readonly ICategoryRepository _categoryRepo;
+    public AssignmentRequisitionHandler(IAssignmentRepository assignmentRepo, ICategoryRepository categoryRepo)
     {
-        _repo = repo;
+        _assignmentRepo = assignmentRepo;
+        _categoryRepo= categoryRepo;
     }
 
     public Assignment Add(AssignmentTransport transport)
-        => _repo.Add(new Assignment(transport.DueDate, transport.IdCategory, transport.Status, transport.Description));
+    {
+        var category = _categoryRepo.GetById(transport.IdCategory);
+        if(category is null)
+        {
+            throw new ArgumentException("Category does not exists. ");
+        }
+        
+        return _assignmentRepo.Add(new Assignment(transport.DueDate, transport.IdCategory, (EStatus)transport.AssignmentStatus, transport.Description));
+    }
 
     public Assignment GetById(int id)
-        => _repo.GetById(id);
+        => _assignmentRepo.GetById(id);
+
+    public IList<Assignment> GetByStatus(EStatus status)
+    {
+        if (!Enum.IsDefined(typeof(EStatus), status))
+        {
+            throw new ArgumentException("Status not valid.");
+        }
+
+        return _assignmentRepo.GetByStatus(status);
+    }
+
+    public IList<Assignment> GetCompleted()
+        => _assignmentRepo.GetCompleted();
+
+    public IList<Assignment> GetNotCompleted()
+        => _assignmentRepo.GetNotCompleted();
 
     public bool Remove(int id)
     {
-        var toRemove = _repo.GetById(id);
+        var toRemove = _assignmentRepo.GetById(id);
         if(toRemove is not null)
         {
             toRemove.Deactivate();
-            _repo.Update(toRemove);
+            _assignmentRepo.Update(toRemove);
             return true;
         }
         return false;
@@ -36,7 +62,7 @@ public sealed class AssignmentRequisitionHandler : IAssignmentRequisitionHandler
 
     public Assignment Update(AssignmentTransport transport)
     {
-        var toUpdate = _repo.GetById(transport.Id);
+        var toUpdate = _assignmentRepo.GetById(transport.Id);
         if (toUpdate is null) 
         {
             throw new ArgumentException("Entity does not exists");
@@ -45,13 +71,13 @@ public sealed class AssignmentRequisitionHandler : IAssignmentRequisitionHandler
         {
             toUpdate.ChangeCategory(transport.IdCategory);
             toUpdate.ChangeDescription(transport.Description);
-            toUpdate.ChangeStatus(transport.Status);
+            toUpdate.ChangeStatus(transport.AssignmentStatus);
             toUpdate.ChangeDueDate(transport.DueDate);
             if (transport.Completed)
             {
                 toUpdate.IsCompleted();
             }
-            _repo.Update(toUpdate);
+            _assignmentRepo.Update(toUpdate);
         }
 
         return toUpdate;

@@ -1,16 +1,19 @@
 ﻿using DomainEnums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities
 {
+    [Table("assignments")]
     public sealed class Assignment
     {
-        public Assignment(DateTime dueDate, int idCategory, EStatus status, string? description)
+        public Assignment(DateTime dueDate, int idCategory, EStatus assignmentStatus, string? description)
         {
             ChangeDueDate(dueDate);
             ChangeCategory(idCategory);
-            ChangeStatus(status);
+            ChangeStatus(assignmentStatus);
             ChangeDescription(description);
+            Completed = false;
             Active = true;
         }
 
@@ -18,8 +21,7 @@ namespace Entities
         public int Id { get; private set; }
         public DateTime DueDate { get; private set; }
         public int IdCategory { get; private set; }
-        public Category Category { get; private set; }
-        public EStatus Status { get; private set; }
+        public EStatus AssignmentStatus { get; private set; }
         public string? Description { get; private set; }
         public bool Completed { get; private set; }
         public bool Active { get; private set; }
@@ -38,7 +40,15 @@ namespace Entities
 
         public bool ChangeStatus(EStatus newStatus)
         {
-            Status = newStatus;
+            if(!Enum.IsDefined(typeof(EStatus), newStatus))
+            {
+                throw new ArgumentException("Status not valid.");
+            }
+            if(newStatus == EStatus.Done)
+            {
+                IsCompleted();
+            }
+            AssignmentStatus = newStatus;
             return true;
         }
 

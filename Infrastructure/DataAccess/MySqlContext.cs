@@ -12,4 +12,5 @@ public sealed class MySqlContext :DbContext, IMySqlContext
     }
 
     public DbSet<Assignment> Assignments { get; set; }
+    public DbSet<Category> Categories { get; set; }
 }

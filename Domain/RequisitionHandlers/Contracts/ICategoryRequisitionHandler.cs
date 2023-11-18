@@ -10,10 +10,7 @@ using DomainEnums;
 
 namespace RequisitionHandlers.Contracts
 {
-    public interface IAssignmentRequisitionHandler : IBaseRequisitionHandler<Assignment, AssignmentTransport>
+    public interface ICategoryRequisitionHandler : IBaseRequisitionHandler<Category, CategoryTransport>
     {
-        public IList<Assignment> GetByStatus(EStatus status);
-        public IList<Assignment> GetCompleted();
-        public IList<Assignment> GetNotCompleted();
     }
 }

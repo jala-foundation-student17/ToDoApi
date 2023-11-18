@@ -1,5 +1,4 @@
-﻿using DomainEnums;
-using Entities;
+﻿using Entities;
 using InfrastructureContracts.DataAccess;
 using InfrastructureContracts.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -7,18 +6,18 @@ using System.Linq.Expressions;
 
 namespace Repositories;
 
-public sealed class AssignmentRepository : IAssignmentRepository
+public sealed class CategoryRepository : ICategoryRepository
 {
-    private readonly DbSet<Assignment> _dbSet;
+    private readonly DbSet<Category> _dbSet;
     private readonly IMySqlContext _context;
 
-    public AssignmentRepository(IMySqlContext context)
+    public CategoryRepository(IMySqlContext context)
     {
-        _dbSet = context.Set<Assignment>();
+        _dbSet = context.Set<Category>();
         _context = context;
     }
 
-    public Assignment Add(Assignment toAdd)
+    public Category Add(Category toAdd)
     {
         _dbSet.Add(toAdd);
         if (SaveChanges())
@@ -28,17 +27,8 @@ public sealed class AssignmentRepository : IAssignmentRepository
         throw new ArgumentException("Unable to add entity");
     }
 
-    public Assignment GetById(int id)
-        => _dbSet.First(x=>x.Id == id);
-
-    public IList<Assignment> GetByStatus(EStatus status)
-        => _dbSet.Where(x => x.AssignmentStatus == status).ToList();
-
-    public IList<Assignment> GetCompleted()
-        => _dbSet.Where(x => x.Completed == true).ToList();
-
-    public IList<Assignment> GetNotCompleted()
-        => _dbSet.Where(x => x.Completed == false).ToList();
+    public Category GetById(int id)
+        => _dbSet.FirstOrDefault(x=>x.Id == id);
 
     public bool Remove(int id)
     {
@@ -56,7 +46,7 @@ public sealed class AssignmentRepository : IAssignmentRepository
         return false;
     }
 
-    public Assignment Update(Assignment toUpdate)
+    public Category Update(Category toUpdate)
     {
         _dbSet.Update(toUpdate);
         if (SaveChanges())
