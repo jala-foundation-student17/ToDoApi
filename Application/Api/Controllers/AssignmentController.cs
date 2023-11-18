@@ -56,8 +56,8 @@ namespace Api.Controllers
         {
             try
             {
-
-                return Ok(_handler.Remove(id));
+                _handler.Remove(id);
+                return NoContent();
             }
             catch (ArgumentException ex)
             {
@@ -142,8 +142,13 @@ namespace Api.Controllers
         {
             try
             {
+                var entity = _handler.GetById(id);
+                if(entity is not null)
+                {
 
-                return Ok(_handler.GetById(id));
+                    return Ok();
+                }
+                return BadRequest("Entity does not exists.");
             }
             catch (ArgumentException ex)
             {

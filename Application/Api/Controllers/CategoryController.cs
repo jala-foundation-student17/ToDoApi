@@ -22,11 +22,11 @@ namespace Api.Controllers
             {
                 return Ok(_handler.Add(transport));
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -37,14 +37,13 @@ namespace Api.Controllers
         {
             try
             {
-
-            return Ok(_handler.Update(transport));
+                return Ok(_handler.Update(transport));
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -55,14 +54,14 @@ namespace Api.Controllers
         {
             try
             {
-
-            return Ok(_handler.Remove(id));
+                _handler.Remove(id);
+                return NoContent();
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -74,14 +73,19 @@ namespace Api.Controllers
         {
             try
             {
+                var entity = _handler.GetById(id);
+                if (entity is not null)
+                {
 
-            return Ok(_handler.GetById(id));
+                    return Ok();
+                }
+                return BadRequest("Entity does not exists.");
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }

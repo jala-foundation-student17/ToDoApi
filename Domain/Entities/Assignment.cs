@@ -28,6 +28,11 @@ namespace Entities
 
         public bool ChangeDueDate(DateTime newDueDate)
         {
+            if(newDueDate.Date < DateTime.Now.Date)
+            {
+                throw new ArgumentException("Invalid date");
+
+            }
             DueDate = newDueDate;
             return true;
         }
