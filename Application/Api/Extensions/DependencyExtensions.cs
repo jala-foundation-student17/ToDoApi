@@ -16,6 +16,7 @@ namespace Api.Extensions
             services.AddTransient<IAssignmentRepository, AssignmentRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
         }
+
         public static void AddHandlers(this IServiceCollection services)
         {
             services.AddTransient<IAssignmentRequisitionHandler, AssignmentRequisitionHandler>();
@@ -33,13 +34,17 @@ namespace Api.Extensions
 
 
         }
+
         public static void DataAccess(this IServiceCollection services, string connStr)
         {
+            if (String.IsNullOrEmpty(connStr))
+            {
+                throw new Exception("Connection string can not be null");
+            }
 
             services.AddTransient<DbContextOptionsBuilder>();
 
             services.AddDbContext<IMySqlContext, MySqlContext>(opt => opt.UseMySql(connStr, ServerVersion.AutoDetect(connStr)));
-
 
         }
     }

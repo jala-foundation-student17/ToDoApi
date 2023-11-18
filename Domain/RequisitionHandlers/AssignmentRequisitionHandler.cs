@@ -45,6 +45,12 @@ public sealed class AssignmentRequisitionHandler : IAssignmentRequisitionHandler
     public IList<Assignment> GetCompleted()
         => _assignmentRepo.GetCompleted();
 
+    public IList<Assignment> GetDueDateHigherThan(DateTime dateToGet)
+        => _assignmentRepo.GetDueDateHigherThan(dateToGet);
+
+    public IList<Assignment> GetDueDateLessThan(DateTime dateToGet)
+    => _assignmentRepo.GetDueDateLessThan(dateToGet);
+
     public IList<Assignment> GetNotCompleted()
         => _assignmentRepo.GetNotCompleted();
 
@@ -69,6 +75,7 @@ public sealed class AssignmentRequisitionHandler : IAssignmentRequisitionHandler
         }
         else
         {
+            toUpdate.SetUpdateDate();
             toUpdate.ChangeCategory(transport.IdCategory);
             toUpdate.ChangeDescription(transport.Description);
             toUpdate.ChangeStatus(transport.AssignmentStatus);

@@ -37,6 +37,12 @@ public sealed class AssignmentRepository : IAssignmentRepository
     public IList<Assignment> GetCompleted()
         => _dbSet.Where(x => x.Completed == true).ToList();
 
+    public IList<Assignment> GetDueDateHigherThan(DateTime dateToGet)
+        => _dbSet.Where(x=>x.DueDate.Date >= dateToGet.Date).ToList();
+
+    public IList<Assignment> GetDueDateLessThan(DateTime dateToGet)
+        => _dbSet.Where(x => x.DueDate.Date <= dateToGet.Date).ToList();
+
     public IList<Assignment> GetNotCompleted()
         => _dbSet.Where(x => x.Completed == false).ToList();
 

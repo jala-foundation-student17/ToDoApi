@@ -9,17 +9,19 @@ namespace Entities
     {
         public Assignment(DateTime dueDate, int idCategory, EStatus assignmentStatus, string? description)
         {
+            Active = true;
+            Completed = false;
+            SetUpdateDate();
             ChangeDueDate(dueDate);
             ChangeCategory(idCategory);
             ChangeStatus(assignmentStatus);
             ChangeDescription(description);
-            Completed = false;
-            Active = true;
         }
 
         [Key]
         public int Id { get; private set; }
         public DateTime DueDate { get; private set; }
+        public DateTime UpdateDate { get; private set; }
         public int IdCategory { get; private set; }
         public EStatus AssignmentStatus { get; private set; }
         public string? Description { get; private set; }
@@ -28,9 +30,9 @@ namespace Entities
 
         public bool ChangeDueDate(DateTime newDueDate)
         {
-            if(newDueDate.Date < DateTime.Now.Date)
+            if(newDueDate.Date < DateTime.Now.Date && Active)
             {
-                throw new ArgumentException("Invalid date");
+                throw new ArgumentException("Invalid Due Date.");
 
             }
             DueDate = newDueDate;
@@ -43,6 +45,10 @@ namespace Entities
             return true;
         }
 
+        public void SetUpdateDate()
+        {
+            UpdateDate = DateTime.Now;
+        }
         public bool ChangeStatus(EStatus newStatus)
         {
             if(!Enum.IsDefined(typeof(EStatus), newStatus))

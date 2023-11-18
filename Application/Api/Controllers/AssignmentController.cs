@@ -136,6 +136,51 @@ namespace Api.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult GetDueDateHigherThan(DateTime dateToGet)
+        {
+            try
+            {
+                var entity = _handler.GetDueDateHigherThan(dateToGet);
+                if (entity is not null)
+                {
+
+                    return Ok(entity);
+                }
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetDueDateLessThan(DateTime dateToGet)
+        {
+            try
+            {
+                var entity = _handler.GetDueDateLessThan(dateToGet);
+                if (entity is not null)
+                {
+
+                    return Ok(entity);
+                }
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
         [HttpGet]
         public IActionResult GetById(int id)
@@ -146,7 +191,7 @@ namespace Api.Controllers
                 if(entity is not null)
                 {
 
-                    return Ok();
+                    return Ok(entity);
                 }
                 return BadRequest("Entity does not exists.");
             }

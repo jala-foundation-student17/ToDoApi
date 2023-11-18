@@ -77,7 +77,7 @@ namespace Api.Controllers
                 if (entity is not null)
                 {
 
-                    return Ok();
+                    return Ok(entity);
                 }
                 return BadRequest("Entity does not exists.");
             }
