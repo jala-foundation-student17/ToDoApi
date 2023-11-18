@@ -27,8 +27,8 @@ public sealed class AssignmentRepository : IAssignmentRepository
         throw new ArgumentException("Unable to add entity");
     }
 
-    public IList<Assignment> GetByFilter(Expression<Func<Assignment, bool>> filter)
-        => _dbSet.Where(filter).ToList();
+    public Assignment GetById(int id)
+        => _dbSet.FirstOrDefault(x=>x.Id == id);
 
     public bool Remove(int id)
     {

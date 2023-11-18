@@ -5,7 +5,7 @@ namespace InfrastructureContracts.Repositories.Base
     public interface IBaseRepository<E> where E : class
     {
         public E Add(E toAdd);
-        public IList<E> GetByFilter(Expression<Func<E, bool>> filter);
+        public E GetById(int id);
         public E Update(E toUpdate);
         public bool Remove(int id);
     }
